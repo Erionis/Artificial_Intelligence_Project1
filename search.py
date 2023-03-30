@@ -88,6 +88,7 @@ def depthFirstSearch(problem):
     """
     "*** YOUR CODE HERE ***"
     
+    # we need to use a priority Queue
     frontier = util.Stack()
     # every element in frontier is in the form (state, path, cost)
     current = (problem.getStartState(), [], 0)
@@ -113,15 +114,67 @@ def depthFirstSearch(problem):
         
     #util.raiseNotDefined()
 
-def breadthFirstSearch(problem: SearchProblem):
+def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    
+    # we need to use a priority Queue
+    frontier = util.Queue()
+    # every element in frontier is in the form (state, path, cost)
+    current = (problem.getStartState(), [], 0)
+    # initialize the first element in the frontier
+    frontier.push(current)
+    # create a set for nodes already expanded
+    expanded = set()
+    
+    while not frontier.isEmpty():
+        # get the node from the stack
+        curState, curPath, curCost = frontier.pop()
+        # if it has not been expanded before :
+        if not curState in expanded:
+            expanded.add(curState)
+            
+            if problem.isGoalState(curState):
+                return curPath
+            # if it is not the goal state, check all the successors states
+            for state, direction, cost in problem.getSuccessors(curState):
+                # create a new element in the frontier
+                frontier.push((state, curPath + [direction], curCost + cost))
+    return []
+        
+    
+    #util.raiseNotDefined()
 
-def uniformCostSearch(problem: SearchProblem):
+def uniformCostSearch(problem):
     """Search the node of least total cost first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    
+    # we need to use a priority Queue
+    frontier = util.PriorityQueue()
+    # every element in frontier is in the form ((state, path, cost), cost)
+
+    # initialize the first element in the frontier
+    frontier.push((problem.getStartState(), [], 0),0)
+    # create a set for nodes already expanded
+    expanded = set()
+    
+    while not frontier.isEmpty():
+        # get the node from the stack
+        curState, curPath, curCost = frontier.pop()
+        # if it has not been expanded before :
+        if not curState in expanded:
+            expanded.add(curState)
+            
+            if problem.isGoalState(curState):
+                return curPath
+            # if it is not the goal state, check all the successors states
+            for state, direction, cost in problem.getSuccessors(curState):
+                # create a new element in the frontier
+                frontier.push((state, curPath + [direction], curCost + cost), curCost + cost)
+    return []
+    
+    
+    #util.raiseNotDefined()
 
 def nullHeuristic(state, problem=None):
     """
