@@ -88,9 +88,9 @@ def depthFirstSearch(problem):
     """
     "*** YOUR CODE HERE ***"
     
-    # we need to use a priority Queue
+    # we need to use a Stack
     frontier = util.Stack()
-    # every element in frontier is in the form (state, path, cost)
+    # every element in the frontier is a tuple (state, path, cost)
     current = (problem.getStartState(), [], 0)
     # initialize the first element in the frontier
     frontier.push(current)
@@ -99,54 +99,59 @@ def depthFirstSearch(problem):
     
     while not frontier.isEmpty():
         # get the node from the stack
-        curState, curPath, curCost = frontier.pop()
+        node, path, cost = frontier.pop()
+        # if is the goal return path        
+        if problem.isGoalState(node):
+            return path
+        
         # if it has not been expanded before :
-        if not curState in expanded:
-            expanded.add(curState)
-            
-            if problem.isGoalState(curState):
-                return curPath
+        if not node in expanded:
+            expanded.add(node)
             # if it is not the goal state, check all the successors states
-            for state, direction, cost in problem.getSuccessors(curState):
+            for next_node, direction, step_cost in problem.getSuccessors(node):
                 # create a new element in the frontier
-                frontier.push((state, curPath + [direction], curCost + cost))
+                new_path = path + [direction]
+                new_cost = cost + step_cost
+                frontier.push((next_node, new_path, new_cost))
     return []
         
-    #util.raiseNotDefined()
 
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
+    
     "*** YOUR CODE HERE ***"
     
-    # we need to use a priority Queue
+    # we need to use a Queue
     frontier = util.Queue()
     # every element in frontier is in the form (state, path, cost)
     current = (problem.getStartState(), [], 0)
     # initialize the first element in the frontier
     frontier.push(current)
     # create a set for nodes already expanded
-    expanded = set()
+    expanded = []
     
     while not frontier.isEmpty():
         # get the node from the stack
-        curState, curPath, curCost = frontier.pop()
-        # if it has not been expanded before :
-        if not curState in expanded:
-            expanded.add(curState)
-            
-            if problem.isGoalState(curState):
-                return curPath
-            # if it is not the goal state, check all the successors states
-            for state, direction, cost in problem.getSuccessors(curState):
-                # create a new element in the frontier
-                frontier.push((state, curPath + [direction], curCost + cost))
-    return []
+        node, path, cost = frontier.pop()
+        # if is the goal return path        
+        if problem.isGoalState(node):
+            return path
         
-    
-    #util.raiseNotDefined()
+        # if it has not been expanded before :
+        if not node in expanded:
+            expanded.append(node)
+            # if it is not the goal state, check all the successors states
+            for next_state, direction, step_cost in problem.getSuccessors(node):
+                # create a new element in the frontier
+                new_path = path + [direction]
+                new_cost = cost + step_cost
+                frontier.push((next_state, new_path, new_cost))
+    return []
+
 
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
+    
     "*** YOUR CODE HERE ***"
     
     # we need to use a priority Queue
@@ -160,21 +165,23 @@ def uniformCostSearch(problem):
     
     while not frontier.isEmpty():
         # get the node from the stack
-        curState, curPath, curCost = frontier.pop()
+        node, path, cost = frontier.pop()
+        # if is the goal return path
+        if problem.isGoalState(node):
+            return path
+        
         # if it has not been expanded before :
-        if not curState in expanded:
-            expanded.add(curState)
-            
-            if problem.isGoalState(curState):
-                return curPath
+        if not node in expanded:
+            expanded.add(node)
             # if it is not the goal state, check all the successors states
-            for state, direction, cost in problem.getSuccessors(curState):
+            for next_node, direction, step_cost  in problem.getSuccessors(node):
                 # create a new element in the frontier
-                frontier.push((state, curPath + [direction], curCost + cost), curCost + cost)
+                new_path = path + [direction]
+                new_cost = cost + step_cost
+                frontier.push((next_node, new_path, new_cost), new_cost)
     return []
     
     
-    #util.raiseNotDefined()
 
 def nullHeuristic(state, problem=None):
     """
@@ -183,11 +190,36 @@ def nullHeuristic(state, problem=None):
     """
     return 0
 
-def aStarSearch(problem: SearchProblem, heuristic=nullHeuristic):
+def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
 
+    # we need to use a priority Queue
+    frontier = util.PriorityQueue()
+    # every element in frontier is in the form ((state, path, cost), cost)
+    # initialize the first element in the frontier
+    frontier.push((problem.getStartState(), [], 0),0)
+    # create a set for nodes already expanded
+    expanded = list()
+    
+    while not frontier.isEmpty():
+        # get the node from the stack
+        node, path, cost = frontier.pop()
+        # if is the goal return path
+        if problem.isGoalState(node):
+            return path
+        # if it has not been expanded before :
+        if not node in expanded:
+            expanded.append(node)
+            
+            for next_node, direction, step_cost  in problem.getSuccessors(node):
+                new_path = path + [direction]
+                new_cost = cost + step_cost
+                new_f = cost + heuristic(next_node, problem)
+                # create a new element in the frontier
+                frontier.push((next_node, new_path, new_cost), new_f)
+    return []    
+    
 
 # Abbreviations
 bfs = breadthFirstSearch
