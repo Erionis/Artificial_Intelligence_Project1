@@ -526,17 +526,17 @@ def foodHeuristic(state: Tuple[Tuple, List[List]], problem: FoodSearchProblem):
     
     # return min_food_distance
     
-    # FURTHEST FOOD FROM PACMAN
+    #FURTHEST FOOD FROM PACMAN
 
-    # # If there is no food left, return 0
-    # if not foodGrid.asList():
-    #     return 0
+    # If there is no food left, return 0
+    if not foodGrid.asList():
+        return 0
 
-    # # Get the furthest food from the pacman using mazeDistance
-    # food_distances = [mazeDistance(position, food, problem.startingGameState) for food in foodGrid.asList()]
-    # furthest_food_distance = max(food_distances)
+    # Get the furthest food from the pacman using mazeDistance
+    food_distances = [mazeDistance(position, food, problem.startingGameState) for food in foodGrid.asList()]
+    furthest_food_distance = max(food_distances)
     
-    # return furthest_food_distance
+    return furthest_food_distance
 
     """
     A consistent heuristic for the FoodSearchProblem that tries to estimate the
