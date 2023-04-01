@@ -513,20 +513,20 @@ def foodHeuristic(state: Tuple[Tuple, List[List]], problem: FoodSearchProblem):
     position, foodGrid = state
     "*** YOUR CODE HERE ***"
     
-    ## MANHATTAN DISTANCE   
-    food_list = foodGrid.asList()
-    pacX, pacY = position
+    # ## MANHATTAN DISTANCE   
+    # food_list = foodGrid.asList()
+    # pacX, pacY = position
     
-    # if there is no food left
-    if not food_list:
-        return 0
+    # # if there is no food left
+    # if not food_list:
+    #     return 0
     
-    # get the Manhattan Distance of the closest food from pacman
-    min_food_distance = min([abs(pacX-food[0]) + abs(pacY-food[1]) for food in food_list])
+    # # get the Manhattan Distance of the closest food from pacman
+    # min_food_distance = min([abs(pacX-food[0]) + abs(pacY-food[1]) for food in food_list])
     
-    return min_food_distance
+    # return min_food_distance
     
-    ## FURTHEST FOOD FROM PACMAN
+    # FURTHEST FOOD FROM PACMAN
 
     # # If there is no food left, return 0
     # if not foodGrid.asList():
@@ -537,6 +537,15 @@ def foodHeuristic(state: Tuple[Tuple, List[List]], problem: FoodSearchProblem):
     # furthest_food_distance = max(food_distances)
     
     # return furthest_food_distance
+
+    """
+    A consistent heuristic for the FoodSearchProblem that tries to estimate the
+    minimum number of actions required to collect all the remaining food dots.
+    """
+
+
+
+    
        
 
 class ClosestDotSearchAgent(SearchAgent):

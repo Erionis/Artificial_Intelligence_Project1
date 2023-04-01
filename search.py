@@ -215,7 +215,7 @@ def aStarSearch(problem, heuristic=nullHeuristic):
             for next_node, direction, step_cost  in problem.getSuccessors(node):
                 new_path = path + [direction]
                 new_cost = cost + step_cost
-                new_f = cost + heuristic(next_node, problem)
+                new_f = new_cost + heuristic(next_node, problem)
                 # create a new element in the frontier
                 frontier.push((next_node, new_path, new_cost), new_f)
     return []    
