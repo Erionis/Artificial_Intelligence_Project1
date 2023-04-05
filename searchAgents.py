@@ -395,29 +395,38 @@ def cornersHeuristic(state: Any, problem: CornersProblem):
     """
     corners = problem.corners # These are the corner coordinates
     walls = problem.walls # These are the walls of the maze, as a Grid (game.py)
-    
 
+    
     "*** YOUR CODE HERE ***"
+    current_position, visited_corners = state
+    corners_left = set()
+
+    for corner in corners:
+        if corner not in visited_corners:
+            corners_left.add(corner)
+
+    def Manhattan_distance_Between(p1, p2):
+        return abs(p1[0] - p2[0]) + abs(p1[1] - p2[1])
+
+    result = 0
+
+    while len(corners_left) > 0:
+        min_corner = None
+        min_distance = 0
+
+        for corner in corners_left:
+            distance = Manhattan_distance_Between(corner, current_position)
+            if min_corner == None or distance < min_distance:
+                min_corner = corner
+                min_distance = distance
+
+        result += min_distance
+        corners_left.remove(min_corner)
+        current_position = min_corner
+
+    return result
     
-    
-    node = state[0]
-    corner_visited = state[1]
-    
-    unvisited = [corner for corner in corners if corner not in corner_visited]
      
-    totalDistance = 0
-    
-    while unvisited:
-        # The heuristic calculates the sum of the minimum distances 
-        # from the unvisited corners to the current state, calculated using the provided "mazeDistance" function. 
-        distance, corner = min([(mazeDistance(node, corner, problem.startingState), corner) for corner in unvisited])
-        totalDistance += distance
-        node = corner
-        unvisited.remove(corner)
-        
-    return totalDistance   
-    
-    
 
 
 class AStarCornersAgent(SearchAgent):
@@ -513,22 +522,7 @@ def foodHeuristic(state: Tuple[Tuple, List[List]], problem: FoodSearchProblem):
     position, foodGrid = state
     "*** YOUR CODE HERE ***"
     
-    # ## MANHATTAN DISTANCE   
-    # food_list = foodGrid.asList()
-    # pacX, pacY = position
-    
-    # # if there is no food left
-    # if not food_list:
-    #     return 0
-    
-    # # get the Manhattan Distance of the closest food from pacman
-    # min_food_distance = min([abs(pacX-food[0]) + abs(pacY-food[1]) for food in food_list])
-    
-    # return min_food_distance
-    
-    #FURTHEST FOOD FROM PACMAN
 
-    # If there is no food left, return 0
     if not foodGrid.asList():
         return 0
 
@@ -537,17 +531,8 @@ def foodHeuristic(state: Tuple[Tuple, List[List]], problem: FoodSearchProblem):
     furthest_food_distance = max(food_distances)
     
     return furthest_food_distance
-
-    """
-    A consistent heuristic for the FoodSearchProblem that tries to estimate the
-    minimum number of actions required to collect all the remaining food dots.
-    """
-
-
-
     
        
-
 class ClosestDotSearchAgent(SearchAgent):
     "Search for all food using a sequence of searches"
     def registerInitialState(self, state):
